@@ -24,5 +24,8 @@ export default function useProgram() {
         }
 
     }, [wallet, connection]);
+    React.useEffect(() => {
+        loadProgram();
+    }, [])
     return { program, loadProgram };
 }
