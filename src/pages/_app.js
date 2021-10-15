@@ -2,6 +2,7 @@ import React from "react";
 import Navbar from "components/Navbar";
 import Footer from "components/Footer";
 import { AuthProvider } from "util/auth";
+import { ContractProvider } from "xcomponents/contract";
 import { ThemeProvider } from "util/theme";
 import { QueryClientProvider } from "util/db";
 import dynamic from 'next/dynamic';
@@ -22,7 +23,9 @@ function MyApp({ Component, pageProps }) {
               logoInverted="https://uploads.divjoy.com/logo-white.svg"
             />
             <WalletConnectionProvider>
-              <Component {...pageProps} />
+              <ContractProvider>
+                <Component {...pageProps} />
+              </ContractProvider>
             </WalletConnectionProvider>
 
             <Footer
@@ -39,7 +42,7 @@ function MyApp({ Component, pageProps }) {
           </>
         </AuthProvider>
       </ThemeProvider>
-    </QueryClientProvider>
+    </QueryClientProvider >
   );
 }
 

@@ -1,16 +1,24 @@
 import React from "react";
 import Meta from "components/Meta";
-import VisitorSection from "ycomponents/VisitorSection";
+import HeroSection from "components/HeroSection";
 import ClientsSection from "components/ClientsSection";
 import FeaturesSection from "components/FeaturesSection";
 import TestimonialsSection from "components/TestimonialsSection";
 import NewsletterSection from "components/NewsletterSection";
+import { useContract } from "xcomponents/contract";
+import { Button } from "@material-ui/core";
+
+
 
 function IndexPage(props) {
+  const { mint, account, refresh } = useContract();
   return (
     <>
       <Meta />
-      <VisitorSection
+      <div>{mint && mint.toString()}</div>
+      <div>{JSON.stringify(account)}</div>
+      <Button onClick={async () => await refresh()}>Refresh</Button>
+      <HeroSection
         bgColor="default"
         size="medium"
         bgImage=""
