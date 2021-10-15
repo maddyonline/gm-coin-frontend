@@ -10,7 +10,7 @@ export default function useProgram() {
     const { connection } = useConnection();
     const wallet = useAnchorWallet();
     const [program, setProgram] = React.useState(null);
-    React.useEffect(() => {
+    const loadProgram = React.useCallback(() => {
         if (wallet && connection) {
             const provider = new anchor.Provider(
                 connection,
@@ -24,5 +24,5 @@ export default function useProgram() {
         }
 
     }, [wallet, connection]);
-    return program;
+    return { program, loadProgram };
 }

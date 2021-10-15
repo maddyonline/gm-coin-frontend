@@ -7,6 +7,9 @@ import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 // import { WalletNotConnectedError } from '@solana/wallet-adapter-base';
 import { PublicKey } from "@solana/web3.js";
 import { useItemsByOwner } from "util/db";
+
+import createTokenAccount from "./instructions/createTokenAccount";
+
 import useProgram from "./program";
 
 const OWNER = "gVJfW7KKRyRI5auW7OVrrs5Nawi1";
@@ -29,12 +32,15 @@ export function ContractProvider({ children }) {
 export const useContractProvider = () => {
     const [mint, setMint] = React.useState(null);
     const [account, setAccount] = React.useState(null);
+    const [accountStatus, setAccountStatus] = React.useState("unknown");
 
     const { connection } = useConnection();
     const { publicKey } = useWallet();
-    const program = useProgram();
+    const { program, loadProgram } = useProgram();
 
     const { status: itemsStatus, data: itemsData } = useItemsByOwner(OWNER)
+
+
 
     React.useEffect(() => {
         if (itemsStatus === 'success' && itemsData && itemsData.length > 0) {
@@ -55,7 +61,7 @@ export const useContractProvider = () => {
 
     const refresh = useCallback(async () => {
         if (!publicKey || !mint || !connection) return;
-
+        loadProgram();
         console.log({
             ASSOCIATED_TOKEN_PROGRAM_ID,
             TOKEN_PROGRAM_ID,
@@ -77,14 +83,29 @@ export const useContractProvider = () => {
         );
         try {
             setAccount(await client.getAccountInfo(associatedToken));
+            setAccountStatus("Found");
         } catch (error) {
             console.log(error);
+            setAccountStatus("Not Found");
+
         }
     }, [publicKey, connection, mint, account, setAccount]);
+
+    const create = React.useCallback(async () => {
+        if (!program) {
+            loadProgram();
+            return;
+        }
+        await createTokenAccount(program, mint);
+        await refresh()
+
+    }, [program, mint])
 
     return {
         mint,
         account,
+        accountStatus,
         refresh,
+        create,
     }
 }

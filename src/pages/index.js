@@ -11,13 +11,17 @@ import { Button } from "@material-ui/core";
 
 
 function IndexPage(props) {
-  const { mint, account, refresh } = useContract();
+  const { mint, account, create, accountStatus, refresh } = useContract();
   return (
     <>
       <Meta />
       <div>{mint && mint.toString()}</div>
+      <div>{accountStatus}</div>
       <div>{JSON.stringify(account)}</div>
-      <Button onClick={async () => await refresh()}>Refresh</Button>
+      <div>
+        <Button variant="outlined" onClick={async () => await refresh()}>Refresh</Button>
+        <Button variant="outlined" onClick={async () => await create()} disabled={accountStatus !== "Not Found"}>Create Account</Button>
+      </div>
       <HeroSection
         bgColor="default"
         size="medium"
