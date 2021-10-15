@@ -1,6 +1,6 @@
 import React from "react";
 import Meta from "components/Meta";
-import HeroSection from "components/HeroSection";
+import VisitorSection from "ycomponents/VisitorSection";
 import ClientsSection from "components/ClientsSection";
 import FeaturesSection from "components/FeaturesSection";
 import TestimonialsSection from "components/TestimonialsSection";
@@ -10,7 +10,7 @@ function IndexPage(props) {
   return (
     <>
       <Meta />
-      <HeroSection
+      <VisitorSection
         bgColor="default"
         size="medium"
         bgImage=""
