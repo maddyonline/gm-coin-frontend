@@ -95,6 +95,38 @@ function EditItemModal(props) {
               />
             </Grid>
             <Grid item={true} xs={12}>
+              <TextField
+                variant="outlined"
+                type="text"
+                label="Mint"
+                name="mint"
+                defaultValue={itemData && itemData.mint}
+                error={errors.mint ? true : false}
+                helperText={errors.mint && errors.mint.message}
+                fullWidth={true}
+                autoFocus={true}
+                inputRef={register({
+                  required: "Please enter mint public key",
+                })}
+              />
+            </Grid>
+            <Grid item={true} xs={12}>
+              <TextField
+                variant="outlined"
+                type="text"
+                label="Vault"
+                name="vault"
+                defaultValue={itemData && itemData.vault}
+                error={errors.vault ? true : false}
+                helperText={errors.vault && errors.vault.message}
+                fullWidth={true}
+                autoFocus={true}
+                inputRef={register({
+                  required: "Please enter vault public key",
+                })}
+              />
+            </Grid>
+            <Grid item={true} xs={12}>
               <Button
                 variant="contained"
                 color="primary"
