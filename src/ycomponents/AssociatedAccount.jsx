@@ -1,43 +1,61 @@
-import { useWallet } from '@solana/wallet-adapter-react';
-import React from 'react';
+import React, { useCallback } from 'react';
+
+import { useConnection, useWallet } from '@solana/wallet-adapter-react';
+import { WalletNotConnectedError } from '@solana/wallet-adapter-base';
+// import { Keypair, SystemProgram, Transaction } from '@solana/web3.js';
+
 const {
     ASSOCIATED_TOKEN_PROGRAM_ID,
     TOKEN_PROGRAM_ID,
     Token,
 } = require("@solana/spl-token");
 
+export const MyAccountDetails = ({ mint, account, setAccount }) => {
+    const { connection } = useConnection();
+    const { publicKey } = useWallet();
 
-export default function useAssociatedAccount(mint) {
-    const wallet = useWallet()
-    const [account, setAccount] = React.useState(null);
-    React.useEffect(() => {
-        const updateAccount = async () => {
-            try {
-                const associatedToken = await Token.getAssociatedTokenAddress(
-                    ASSOCIATED_TOKEN_PROGRAM_ID,
-                    TOKEN_PROGRAM_ID,
-                    mint,
-                    wallet.publicKey
-                );
 
-                const client = new Token(
-                    program.provider.connection,
-                    mint,
-                    TOKEN_PROGRAM_ID,
-                    program.provider.wallet.publicKey
-                );
+    const onClick = useCallback(async () => {
+        if (!publicKey) throw new WalletNotConnectedError();
+        console.log({
+            ASSOCIATED_TOKEN_PROGRAM_ID,
+            TOKEN_PROGRAM_ID,
+            mint,
+            publicKey
+        })
+        const associatedToken = await Token.getAssociatedTokenAddress(
+            ASSOCIATED_TOKEN_PROGRAM_ID,
+            TOKEN_PROGRAM_ID,
+            mint,
+            publicKey
+        );
 
-                setAccount(await client.getAccountInfo(associatedToken));
+        const client = new Token(
+            connection,
+            mint,
+            TOKEN_PROGRAM_ID,
+            publicKey
+        );
 
-            } catch (error) {
-                console.log(error);
-                return;
-            }
-        }
-        if (mint && wallet) {
-            updateAccount();
-        }
-    }, [mint, wallet])
+        setAccount(await client.getAccountInfo(associatedToken));
+    }, [mint, account, setAccount, publicKey, connection]);
 
-    return account;
-}
+    if (!mint || !mint.toString()) {
+        return null;
+    }
+
+    return (
+        <div>
+            <div>Mint: {mint.toString()}</div>
+            <div>{JSON.stringify(account)}</div>
+            <button onClick={onClick} disabled={!publicKey}>
+                Fetch Details
+            </button>
+        </div>
+
+    );
+};
+
+
+
+

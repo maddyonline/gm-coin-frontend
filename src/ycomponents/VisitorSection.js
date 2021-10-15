@@ -8,7 +8,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import Section from "components/Section";
 import SectionHeader from "components/SectionHeader";
 
-import useAssociatedAccount from "./AssociatedAccount";
+import { PublicKey } from "@solana/web3.js";
+
+import { useItemsByOwner } from "util/db";
+
+import { MyAccountDetails } from "./AssociatedAccount";
 
 const useStyles = makeStyles((theme) => ({
   // Increase <Container> padding so it's
@@ -27,9 +31,25 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+
+const OWNER = "gVJfW7KKRyRI5auW7OVrrs5Nawi1";
+
 function HeroSection(props) {
   const classes = useStyles();
-  const visitorTokenAccount = useAssociatedAccount();
+  const [mint, setMint] = React.useState(null);
+  const [account, setAccount] = React.useState(null);
+
+
+  const { status: itemsStatus, data: itemsData } = useItemsByOwner(OWNER)
+  React.useEffect(() => {
+    if (itemsStatus === 'success' && itemsData && itemsData.length > 0) {
+      const firstItem = itemsData[0];
+      const { mint: mintStr } = firstItem;
+      const mint = new PublicKey(mintStr);
+      setMint(mint);
+    }
+
+  }, [itemsStatus, itemsData])
 
   return (
     <Section
@@ -47,11 +67,7 @@ function HeroSection(props) {
                 subtitle={props.subtitle}
                 size={4}
               />
-              <SectionHeader
-                title={"cool"}
-                subtitle={`stuff: ${JSON.stringify(visitorTokenAccount)}`}
-                size={4}
-              />
+              <MyAccountDetails mint={mint} account={account} setAccount={setAccount} />
 
               <Link href={props.buttonPath} passHref={true}>
                 <Button
