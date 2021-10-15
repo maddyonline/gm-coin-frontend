@@ -7,10 +7,16 @@ const withTM = require('next-transpile-modules')([
     '@solana/wallet-adapter-wallets',
     '@solana/wallet-adapter-material-ui',
     '@solana/wallet-adapter-phantom',
+    '@project-serum/anchor',
 ]);
 
 /** @type {import('next').NextConfig} */
 module.exports = withTM({
     reactStrictMode: true,
     webpack5: true,
+    webpack: (config) => {
+        config.resolve.fallback = { fs: false, path: false, crypto: false };
+
+        return config;
+    },
 });

@@ -1,6 +1,7 @@
 import { useConnection } from '@solana/wallet-adapter-react';
 import { useAnchorWallet } from '@solana/wallet-adapter-react';
 import React from 'react';
+const anchor = require("@project-serum/anchor");
 
 const IDL = require("./idl.json");
 

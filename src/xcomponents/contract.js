@@ -7,6 +7,7 @@ import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 // import { WalletNotConnectedError } from '@solana/wallet-adapter-base';
 import { PublicKey } from "@solana/web3.js";
 import { useItemsByOwner } from "util/db";
+import useProgram from "./program";
 
 const OWNER = "gVJfW7KKRyRI5auW7OVrrs5Nawi1";
 
@@ -31,6 +32,7 @@ export const useContractProvider = () => {
 
     const { connection } = useConnection();
     const { publicKey } = useWallet();
+    const program = useProgram();
 
     const { status: itemsStatus, data: itemsData } = useItemsByOwner(OWNER)
 
@@ -43,6 +45,12 @@ export const useContractProvider = () => {
         }
 
     }, [itemsStatus, itemsData])
+
+    React.useEffect(() => {
+        if (program) {
+            console.log({ program });
+        }
+    }, [program])
 
 
     const refresh = useCallback(async () => {
