@@ -4,6 +4,11 @@ import Footer from "components/Footer";
 import { AuthProvider } from "util/auth";
 import { ThemeProvider } from "util/theme";
 import { QueryClientProvider } from "util/db";
+import dynamic from 'next/dynamic';
+
+const WalletConnectionProvider = dynamic(() => import('../xcomponents/Wallet'), {
+  ssr: false,
+});
 
 function MyApp({ Component, pageProps }) {
   return (
@@ -16,8 +21,9 @@ function MyApp({ Component, pageProps }) {
               logo="https://uploads.divjoy.com/logo.svg"
               logoInverted="https://uploads.divjoy.com/logo-white.svg"
             />
-
-            <Component {...pageProps} />
+            <WalletConnectionProvider>
+              <Component {...pageProps} />
+            </WalletConnectionProvider>
 
             <Footer
               bgColor="light"
