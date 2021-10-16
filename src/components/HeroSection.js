@@ -8,9 +8,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Section from "components/Section";
 import SectionHeader from "components/SectionHeader";
 import { useContract } from "xcomponents/contract";
-import Alert from "@material-ui/lab/Alert";
 import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
 import LinkMui from "@material-ui/core/Link";
 
 const useStyles = makeStyles((theme) => ({
