@@ -11,7 +11,7 @@ import { Button } from "@material-ui/core";
 
 
 function IndexPage(props) {
-  const { mint, visitor, account, create, revisit, accountStatus, refresh } = useContract();
+  const { mint, visitor, account, create, revisit, visit, accountStatus, refresh } = useContract();
   return (
     <>
       <Meta />
@@ -22,8 +22,8 @@ function IndexPage(props) {
       <div>
         <Button variant="outlined" onClick={async () => await refresh()}>Refresh</Button>
         <Button variant="outlined" onClick={async () => await create()} disabled={accountStatus !== "Not Found"}>Create Account</Button>
-        <Button variant="outlined" onClick={async () => await create()} disabled={visitor && visitor[0] !== "Not Found"}>First Visit</Button>
-        <Button variant="outlined" onClick={async () => await revisit()} disabled={visitor && visitor[0] !== "Not Found"}>Revisit</Button>
+        <Button variant="outlined" onClick={async () => await visit()} disabled={visitor && visitor[0] !== "Not Found"}>First Visit</Button>
+        <Button variant="outlined" onClick={async () => await revisit()} disabled={visitor && visitor[0] !== "found"}>Revisit</Button>
       </div>
       <HeroSection
         bgColor="default"

@@ -137,10 +137,10 @@ export const useContractProvider = () => {
             loadProgram();
             return;
         }
-        await firstVisit(program, mint);
+        await firstVisit(program);
         await refresh()
 
-    }, [program, mint])
+    }, [program])
 
     const revisit = React.useCallback(async () => {
         if (!program) {

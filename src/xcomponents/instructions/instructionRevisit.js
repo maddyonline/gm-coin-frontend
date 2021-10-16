@@ -5,29 +5,57 @@ const {
 } = require("@solana/spl-token");
 const anchor = require("@project-serum/anchor");
 
+
+async function lookupPdas(pdas, connection, programId) {
+    for (const seedStr of pdas) {
+        let buffer;
+        if (typeof seedStr === "string") {
+            buffer = Buffer.from(anchor.utils.bytes.utf8.encode(seedStr));
+        } else if (seedStr instanceof anchor.web3.PublicKey) {
+            buffer = seedStr.toBuffer();
+        } else {
+            throw new Error("Unrecognized type");
+        }
+        const [pdaPublicKey, pdaNonce] = await anchor.web3.PublicKey.findProgramAddress(
+            [buffer],
+            programId
+        )
+
+        console.log(seedStr, pdaPublicKey.toString(), pdaNonce)
+        try {
+            const pdaAccount = await connection.getAccountInfo(pdaPublicKey)
+            console.log({ pdaAccount })
+            if (pdaAccount && pdaAccount.owner) {
+                console.log(`owner: ${pdaAccount.owner}`)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+        console.log("---")
+    }
+
+}
+
 export default async function (program, mint) {
-    let visitorTokenAccount;
-    try {
-        const associatedToken = await Token.getAssociatedTokenAddress(
-            ASSOCIATED_TOKEN_PROGRAM_ID,
-            TOKEN_PROGRAM_ID,
-            mint,
-            program.provider.wallet.publicKey
-        );
+    const associatedToken = await Token.getAssociatedTokenAddress(
+        ASSOCIATED_TOKEN_PROGRAM_ID,
+        TOKEN_PROGRAM_ID,
+        mint,
+        program.provider.wallet.publicKey
+    );
 
-        const client = new Token(
-            program.provider.connection,
-            mint,
-            TOKEN_PROGRAM_ID,
-            program.provider.wallet.publicKey
-        );
+    const client = new Token(
+        program.provider.connection,
+        mint,
+        TOKEN_PROGRAM_ID,
+        program.provider.wallet.publicKey
+    );
 
-        const account = await client.getAccountInfo(associatedToken);
-        console.log({ account })
-        visitorTokenAccount = account.address;
-    } catch (error) {
-        console.log(error);
-        return;
+    const account = await client.getAccountInfo(associatedToken);
+    const visitorTokenAccount = account.address;
+
+    if (!visitorTokenAccount) {
+        throw new Error("Visitor token account not ready");
     }
 
     let [vaultProgram, vaultProgramNonce] = await anchor.web3.PublicKey.findProgramAddress(
@@ -44,6 +72,13 @@ export default async function (program, mint) {
         program.programId
     );
 
+    const pdas = [
+        "vault",
+        "gm_coin",
+        visitorState,
+    ]
+    await lookupPdas(pdas, program.provider.connection, program.programId);
+
     const tx = await program.rpc.visitAgain(vaultProgramNonce, {
         accounts: {
             globalState: _pda,
@@ -59,9 +94,9 @@ export default async function (program, mint) {
     });
 
     console.log("Revisit tx", tx);
-    let visitorStateAccount = await program.account.visitorState.fetch(visitorState);
-    console.log({
-        visitorCount: visitorStateAccount.visitCount.toNumber(),
-        lastVisit: visitorStateAccount.lastVisit.toNumber(),
-    });
+    // let visitorStateAccount = await program.account.visitorState.fetch(visitorState);
+    // console.log({
+    //     visitorCount: visitorStateAccount.visitCount.toNumber(),
+    //     lastVisit: visitorStateAccount.lastVisit.toNumber(),
+    // });
 }
