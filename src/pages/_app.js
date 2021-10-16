@@ -17,16 +17,17 @@ function MyApp({ Component, pageProps }) {
       <ThemeProvider>
         <AuthProvider>
           <>
-            <Navbar
+            {/* <Navbar
               color="default"
               logo="https://uploads.divjoy.com/logo.svg"
               logoInverted="https://uploads.divjoy.com/logo-white.svg"
-            />
+            /> */}
             <WalletConnectionProvider>
               <ContractProvider>
                 <Component {...pageProps} />
               </ContractProvider>
             </WalletConnectionProvider>
+
 
             <Footer
               bgColor="light"

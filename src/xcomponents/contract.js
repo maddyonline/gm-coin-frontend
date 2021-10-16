@@ -45,6 +45,7 @@ async function getVisitorState(publicKey, program) {
     )
     try {
         const visitorStateAccount = await program.account.visitorState.fetch(visitorStatePublicKey);
+        window.visit
         console.log({ visitorStateAccount })
         return ["found", visitorStateAccount];
     } catch (error) {

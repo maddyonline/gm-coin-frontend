@@ -89,70 +89,20 @@ function Footer(props) {
       <Container>
         <div className={classes.wrapper}>
           <div className={`${classes.item} ${classes.left}`}>
-            <Link href="/">
-              <a>
-                <img src={logo} alt="Logo" className={classes.brand} />
-              </a>
-            </Link>
+            GM 🙏
           </div>
-          <div
-            className={`${classes.item} ${classes.right} ${classes.smallLinks}`}
-          >
-            <Typography>
-              <Link href="/about" passHref={true}>
-                <LinkMui className={classes.link}>About</LinkMui>
-              </Link>
-              <Link href="/faq" passHref={true}>
-                <LinkMui className={classes.link}>FAQ</LinkMui>
-              </Link>
-              <Link href="/contact" passHref={true}>
-                <LinkMui className={classes.link}>Contact</LinkMui>
-              </Link>
-              <LinkMui
-                href="https://medium.com"
-                target="_blank"
-                rel="noreferrer"
-                className={classes.link}
-              >
-                Blog
-              </LinkMui>
-            </Typography>
-          </div>
+
           <div className={`${classes.item} ${classes.right} ${classes.social}`}>
             <a
-              href="https://twitter.com/divjoy"
+              href="https://twitter.com/madhavjha"
               target="_blank"
               rel="noreferrer"
               className={classes.link}
             >
               <TwitterIcon fontSize="small" />
             </a>
-            <a
-              href="https://facebook.com/DivjoyOfficial"
-              target="_blank"
-              rel="noreferrer"
-              className={classes.link}
-            >
-              <FacebookIcon fontSize="small" />
-            </a>
-            <a
-              href="https://instagram.com"
-              target="_blank"
-              rel="noreferrer"
-              className={classes.link}
-            >
-              <InstagramIcon fontSize="small" />
-            </a>
           </div>
-          <span className={`${classes.item} ${classes.legal} ${classes.left}`}>
-            {props.copyright}
-            <Link href="/legal/terms-of-service" passHref={true}>
-              <LinkMui>Terms</LinkMui>
-            </Link>
-            <Link href="/legal/privacy-policy" passHref={true}>
-              <LinkMui>Privacy</LinkMui>
-            </Link>
-          </span>
+
         </div>
       </Container>
     </Section>
